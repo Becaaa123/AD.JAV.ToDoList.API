@@ -1,0 +1,5 @@
+br\com\rebeca\ToDoList\Controller\TarefaController.class
+br\com\rebeca\ToDoList\ToDoListApplication.class
+br\com\rebeca\ToDoList\dto\TarefaDTO.class
+br\com\rebeca\ToDoList\Service\TarefaService.class
+br\com\rebeca\ToDoList\dto\UsuarioDTO.class
