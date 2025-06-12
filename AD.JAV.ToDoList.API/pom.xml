@@ -56,6 +56,45 @@
 			<artifactId>spring-boot-starter-web-services</artifactId>
 		</dependency>
 
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>2.3.232</version>
+            <scope>test</scope>
+        </dependency>
+         <!-- Dependência do Spring Boot para web -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-web</artifactId>
+            </dependency>
+
+            <!-- Dependência do Spring Boot para segurança -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-security</artifactId>
+            </dependency>
+
+            <!-- Dependência para trabalhar com JWT (se necessário) -->
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt</artifactId>
+                <version>0.9.1</version> <!-- Verifique sempre a versão mais recente -->
+            </dependency>
+
+            <!-- Dependência para logging (se necessário) -->
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>1.7.30</version> <!-- Verifique sempre a versão mais recente -->
+            </dependency>
+
+            <!-- Outros possíveis DTOs e dependências -->
+            <!-- Exemplo: Mapper e dependências JSON -->
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+            </dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>

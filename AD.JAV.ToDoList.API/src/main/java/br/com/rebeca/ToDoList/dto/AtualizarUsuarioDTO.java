@@ -11,10 +11,10 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UsuarioDTO {
+public class AtualizarUsuarioDTO {
     private Long usuarioId;
     private String nome;
     private String email;
     private String senha;
-    private String dataCriacao;
+    private String dataAtualizacao;
 }
