@@ -54,12 +54,11 @@ public class UsuarioService {
     }
 
     public  void  atualizarDadosUsuario(AtualizarUsuarioDTO atualizarUsuarioDTO, String tokenEmail){
-        UsuarioModel usuarioModel = usuarioRepository.findBYId(atualizarUsuarioDTO.getUsuarioId())
+        UsuarioModel usuarioModel = usuarioRepository.findById(atualizarUsuarioDTO.getUsuarioId())
                 .orElseThrow(() -> new BaseException(HttpStatus.BAD_REQUEST, "Usuario não encontrado!"));
 
         usuarioModel.setNome(atualizarUsuarioDTO.getNome());
         usuarioModel.setEmail(atualizarUsuarioDTO.getEmail());
-        usuarioModel.setEmail(tokenEmail);
         usuarioModel.setSenha(atualizarUsuarioDTO.getSenha());
         usuarioModel.setData(LocalDateTime.now());
 

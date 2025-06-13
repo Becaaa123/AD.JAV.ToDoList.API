@@ -4,12 +4,9 @@ import br.com.rebeca.ToDoList.Repository.UsuarioRepositoryCustom;
 import br.com.rebeca.ToDoList.Util.ConverterUtil;
 import br.com.rebeca.ToDoList.dto.AtualizarUsuarioDTO;
 import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.Query;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import jakarta.persistence.Query;
-import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 
 @Log4j2
@@ -25,10 +22,6 @@ public class UsuarioRepositoryImplCustom implements UsuarioRepositoryCustom {
         StringBuilder sql = new StringBuilder();
 
         sql.append(" UPDATE usuario ");
-//
-//        Query query = em.createNamedQuery(sql.toString());
-//
-//        query.setParameter()
     }
 }
 //    @Autowired
