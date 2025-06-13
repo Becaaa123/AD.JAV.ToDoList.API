@@ -14,7 +14,7 @@ import javax.persistence.EntityManager;
 
 @Log4j2
 @Repository
-public abstract class UsuarioRepositoryImplCustom implements UsuarioRepositoryCustom {
+public class UsuarioRepositoryImplCustom implements UsuarioRepositoryCustom {
     @PersistenceContext
     private EntityManager em;
 
