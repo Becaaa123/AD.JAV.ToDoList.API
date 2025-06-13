@@ -108,38 +108,38 @@ public class UsuarioController extends BaseController{
         }
     }
 
-    @Operation(summary = "Realiza a edição de tarefas")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Success", content = {
-                    @Content(mediaType = "application/json", schema = @Schema(implementation = UsuarioDTO.class))
-            }),
-            @ApiResponse(responseCode = "400", description = "Bad Request - Dados inválidos ou ausentes"),
-            @ApiResponse(responseCode = "401", description = "Unauthorized - Usuário não autenticado"),
-            @ApiResponse(responseCode = "403", description = "Forbidden - Ação não permitida para este usuário"),
-            @ApiResponse(responseCode = "500", description = "Internal Server Error - Erro inesperado no servidor"),
-            @ApiResponse(responseCode = "501", description = "Not Implemented - Funcionalidade ainda não implementada"),
-            @ApiResponse(responseCode = "502", description = "Bad Gateway - Erro na comunicação com serviço intermediário"),
-            @ApiResponse(responseCode = "503", description = "Service Unavailable - Sistema temporariamente indisponível"),
-            @ApiResponse(responseCode = "504", description = "Gateway Timeout - Tempo de resposta excedido")
-    })
-    @PutMapping("/atualizar")
-    public ResponseEntity<BaseResponseDTO> atualizarUsuario(
-            @Parameter(description =  "Atualização de dados do usuario")
-            @RequestBody(required = true)AtualizarUsuarioDTO atualizarUsuario,
-            Authentication authentication) {
-        try{
-            Jwt jwt = (Jwt) authentication.getPrincipal();
-            String tokenEmail = jwt.getClaim("email");
-
-            return response(HttpStatus.OK, usuarioService.atualizarUsuario(atualizarUsuario, tokenEmail), SUCCESS);
-        } catch (BaseException be){
-            log.warning(be.getMessage());
-
-            return  errorWithStatusCode(be.getMessage(), be.getHttpStatus());
-        }catch (Exception exception){
-            log.warning(exception.getMessage() + exception);
-
-            return errorWithStatusCode(OCORREU_UM_ERRO_DESCONHECIDO_CONTATE_O_ADMINISTRADOR_DO_SISTEMA, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+//    @Operation(summary = "Realiza a edição de tarefas")
+//    @ApiResponses(value = {
+//            @ApiResponse(responseCode = "200", description = "Success", content = {
+//                    @Content(mediaType = "application/json", schema = @Schema(implementation = UsuarioDTO.class))
+//            }),
+//            @ApiResponse(responseCode = "400", description = "Bad Request - Dados inválidos ou ausentes"),
+//            @ApiResponse(responseCode = "401", description = "Unauthorized - Usuário não autenticado"),
+//            @ApiResponse(responseCode = "403", description = "Forbidden - Ação não permitida para este usuário"),
+//            @ApiResponse(responseCode = "500", description = "Internal Server Error - Erro inesperado no servidor"),
+//            @ApiResponse(responseCode = "501", description = "Not Implemented - Funcionalidade ainda não implementada"),
+//            @ApiResponse(responseCode = "502", description = "Bad Gateway - Erro na comunicação com serviço intermediário"),
+//            @ApiResponse(responseCode = "503", description = "Service Unavailable - Sistema temporariamente indisponível"),
+//            @ApiResponse(responseCode = "504", description = "Gateway Timeout - Tempo de resposta excedido")
+//    })
+//    @PutMapping("/atualizar")
+//    public ResponseEntity<BaseResponseDTO> atualizarUsuario(
+//            @Parameter(description =  "Atualização de dados do usuario")
+//            @RequestBody(required = true)AtualizarUsuarioDTO atualizarUsuario,
+//            Authentication authentication) {
+//        try{
+//            Jwt jwt = (Jwt) authentication.getPrincipal();
+//            String tokenEmail = jwt.getClaim("email");
+//
+//            return response(HttpStatus.OK, usuarioService.atualizarUsuario(atualizarUsuario, tokenEmail), SUCCESS);
+//        } catch (BaseException be){
+//            log.warning(be.getMessage());
+//
+//            return  errorWithStatusCode(be.getMessage(), be.getHttpStatus());
+//        }catch (Exception exception){
+//            log.warning(exception.getMessage() + exception);
+//
+//            return errorWithStatusCode(OCORREU_UM_ERRO_DESCONHECIDO_CONTATE_O_ADMINISTRADOR_DO_SISTEMA, HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
     }
-}
+

@@ -1,24 +1,36 @@
 package br.com.rebeca.ToDoList.Repository.Impl;
 
 import br.com.rebeca.ToDoList.Repository.UsuarioRepositoryCustom;
+import br.com.rebeca.ToDoList.Util.ConverterUtil;
+import br.com.rebeca.ToDoList.dto.AtualizarUsuarioDTO;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Query;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import jakarta.persistence.Query;
+import javax.persistence.Entity;
+import javax.persistence.EntityManager;
 
 @Log4j2
 @Repository
-public class UsuarioRepositoryImplCustom implements UsuarioRepositoryCustom {
+public abstract class UsuarioRepositoryImplCustom implements UsuarioRepositoryCustom {
     @PersistenceContext
-    private EnityManager
+    private EntityManager em;
 
-}
+    @Autowired
+    private ConverterUtil converterUtil;
 
-//@Log4j2
-//@Repository
-//public class FornecedorRepositoryImplCustom implements FornecedorRepositoryCustom {
-//    @PersistenceContext
-//    private EntityManager em;
+    public void atualizarDadosUsuario(AtualizarUsuarioDTO atualizarUsuarioDTO, String tokenEmail){
+        StringBuilder sql = new StringBuilder();
+
+        sql.append(" UPDATE usuario ");
 //
+//        Query query = em.createNamedQuery(sql.toString());
+//
+//        query.setParameter()
+    }
+}
 //    @Autowired
 //    private ConverterUtil converterUtil;
 //
