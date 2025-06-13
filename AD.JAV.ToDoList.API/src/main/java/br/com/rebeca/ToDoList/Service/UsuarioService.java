@@ -31,6 +31,11 @@ public class UsuarioService {
         return usuario;
     }
 
+    public UsuarioDTO buscarUsuario(UsuarioDTO usuario){
+        UsuarioDTO usuarioDTO = new UsuarioDTO();
+        return usuarioDTO;
+    }
+
     @Transactional
     public AtualizarUsuarioDTO atualizarUsuario(AtualizarUsuarioDTO atualizarUsuarioDTO, String tokenEmail){
         log.info("Alteração de dados do usuario");
@@ -39,7 +44,7 @@ public class UsuarioService {
             log.warn("É necessario informar qual usuario será alterado");
             throw  new BaseException(HttpStatus.BAD_REQUEST, "Por favor informe um usuario para ser alterado!!");
         }try {
-            usuarioRepositoryCustom.atualizarDadosUsuario(atualizarUsuarioDTO, tokenEmail);
+            usuarioRepositoryCustom.atualizarDadosDeUsuario(atualizarUsuarioDTO, tokenEmail);
 
             log.info("Usuario " + atualizarUsuarioDTO.getUsuarioId() + " atualizado por " + tokenEmail + ".");
 
@@ -62,11 +67,10 @@ public class UsuarioService {
         usuarioModel.setSenha(atualizarUsuarioDTO.getSenha());
         usuarioModel.setData(LocalDateTime.now());
 
-        usuarioRepository.save(usuarioModel);
-    }
+        if (atualizarUsuarioDTO.getSenha() != null) {
+            usuarioModel.setSenha(atualizarUsuarioDTO.getSenha());
+        }
 
-    public UsuarioDTO buscarUsuario(UsuarioDTO usuario){
-        UsuarioDTO usuarioDTO = new UsuarioDTO();
-        return usuarioDTO;
+        usuarioRepository.save(usuarioModel);
     }
 }

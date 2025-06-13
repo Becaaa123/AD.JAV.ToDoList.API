@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UsuarioRepositoryCustom {
-    void  atualizarDadosUsuario(AtualizarUsuarioDTO  atualizarUsuarioDTO, String tokenEmail);
+    void atualizarDadosDeUsuario(AtualizarUsuarioDTO  atualizarUsuarioDTO, String tokenEmail);
 }

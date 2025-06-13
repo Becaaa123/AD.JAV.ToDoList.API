@@ -36,9 +36,12 @@ public class UsuarioModel {
     @Column(name = "email")
     private  String email;
 
-    @Column(name = "senha")
+    @Column(name = "senha_hash")
     private String senha;
 
     @Column(name = "dataCriacao")
     private LocalDateTime data;
+
+    @Column(name = "dataAtualizacao")
+    private LocalDateTime dataAt;
 }
