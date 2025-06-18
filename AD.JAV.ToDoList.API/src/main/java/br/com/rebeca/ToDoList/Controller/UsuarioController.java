@@ -73,7 +73,7 @@ public class UsuarioController extends BaseController {
         }
     }
 
-    @Operation(summary = "Realiza a adição de tarefas")
+    @Operation(summary = "Realiza a criação de usuarios")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Success", content = {
                     @Content(mediaType = "application/json", schema = @Schema(implementation = UsuarioDTO.class))
@@ -89,18 +89,18 @@ public class UsuarioController extends BaseController {
     })
     @PostMapping("/cadastro")
     public ResponseEntity<BaseResponseDTO> cadastrarUsuario(
-            @Parameter(description = "Cadastrar usuario no sistema")
+            @Parameter(description = "Cadastrar novo usuario no sistema")
             @RequestBody(required = true) UsuarioDTO usuario,
             Authentication authentication) {
         try {
             Jwt jwt = (Jwt) authentication.getPrincipal();
             String tokenEmail = jwt.getClaim("email");
 
-            return response(HttpStatus.OK, usuarioService.cadastraUsuario(usuario), tokenEmail, SUCCESS);
+            return response(HttpStatus.OK, usuarioService.cadastraUsuario(usuario, tokenEmail), "Usuario cadastrado com sucesso" ,SUCCESS);
         } catch (BaseException be) {
             log.warning(be.getMessage());
 
-            return errorWithStatusCode(OCORREU_UM_ERRO_DESCONHECIDO_CONTATE_O_ADMINISTRADOR_DO_SISTEMA, HttpStatus.INTERNAL_SERVER_ERROR);
+            return errorWithStatusCode(be.getMessage(), be.getHttpStatus());
         } catch (Exception exception) {
             log.warning(exception.getMessage() + exception);
 
@@ -108,7 +108,7 @@ public class UsuarioController extends BaseController {
         }
     }
 
-    @Operation(summary = "Realiza a edição de tarefas")
+    @Operation(summary = "Realiza a atualização de usuarios")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Success", content = {
                     @Content(mediaType = "application/json", schema = @Schema(implementation = UsuarioDTO.class))

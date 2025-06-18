@@ -26,9 +26,18 @@ public class UsuarioService {
 
     private final String ERRO_ALTERACAO = "Erro na alteração de usuario!";
 
-    public UsuarioDTO cadastraUsuario(UsuarioDTO usuarioDTO){
-        UsuarioDTO usuario = new UsuarioDTO();
-        return usuario;
+    @Transactional
+    public UsuarioDTO cadastraUsuario(UsuarioDTO usuarioDTO, String tokenEmail){
+        log.info("Cadastro de usuario");
+        try {
+            usuarioRepositoryCustom.cadastraUsuario(usuarioDTO, tokenEmail);
+
+            log.info("Novo usuario " + usuarioDTO.getNome() + " criado por " + tokenEmail + ".");
+            return usuarioDTO;
+        }catch (Exception exception){
+            log.info("ERRO NA  CRIAÇÃO DO USUARIO!! " + exception.getMessage());
+            throw  new BaseException(HttpStatus.BAD_REQUEST, "ERRO AO CADASTRAR USUARIO NO SISTEMA!! ");
+        }
     }
 
     public UsuarioDTO buscarUsuario(UsuarioDTO usuario){
