@@ -1,6 +1,6 @@
 package br.com.rebeca.ToDoList.Util;
 
-import com.google.common.base.Optional;
+import java.util.Optional;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.springframework.context.annotation.Configuration;
@@ -27,12 +27,21 @@ public class ConverterUtil {
     }
 
     public Long toLong(final Object object) {
-        return Long.parseLong(String.valueOf(Optional.fromNullable(object).or("0")));
+        return Long.parseLong(
+                Optional.ofNullable(object)
+                        .map(Object::toString)
+                        .orElse("0")
+        );
     }
 
     public Integer toInt(final Object object) {
-        return Integer.parseInt(String.valueOf(Optional.fromNullable(object).or("0")));
+        return Integer.parseInt(
+                Optional.ofNullable(object)
+                        .map(Object::toString)
+                        .orElse("0")
+        );
     }
+
 
     public Integer toInteger(final Object object) {
         return Integer.parseInt(String.valueOf(object));
