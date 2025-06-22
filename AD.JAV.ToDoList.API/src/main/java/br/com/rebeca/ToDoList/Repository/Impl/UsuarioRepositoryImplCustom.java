@@ -27,20 +27,17 @@ public  class UsuarioRepositoryImplCustom implements UsuarioRepositoryCustom {
     private ConverterUtil converterUtil;
 
     @Transactional
-    public void cadastraUsuario(UsuarioDTO usuarioDTO, String tokenEmail){
+    public void cadastraUsuario(UsuarioDTO usuarioDTO) {
         StringBuilder sql = new StringBuilder();
-
-        sql.append(" INSERT INTO usuario VALUES ");
+        sql.append(" INSERT INTO usuario (nome, email, senha_hash) VALUES ");
         sql.append(" (:nome, ");
-        sql.append(" :email ");
+        sql.append(" :email, ");
         sql.append(" :senha_hash) ");
 
         Query query = em.createNativeQuery(sql.toString());
-
         query.setParameter("nome", usuarioDTO.getNome());
-        query.setParameter("email", usuarioDTO.getEmail() + tokenEmail);
-        query.setParameter("senha", usuarioDTO.getSenha());
-
+        query.setParameter("email", usuarioDTO.getEmail());
+        query.setParameter("senha_hash", usuarioDTO.getSenha());
         query.setFlushMode(FlushModeType.COMMIT);
         query.executeUpdate();
     }

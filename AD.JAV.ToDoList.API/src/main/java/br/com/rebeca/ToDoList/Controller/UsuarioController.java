@@ -79,32 +79,20 @@ public class UsuarioController extends BaseController {
                     @Content(mediaType = "application/json", schema = @Schema(implementation = UsuarioDTO.class))
             }),
             @ApiResponse(responseCode = "400", description = "Bad Request - Dados inválidos ou ausentes"),
-            @ApiResponse(responseCode = "401", description = "Unauthorized - Usuário não autenticado"),
-            @ApiResponse(responseCode = "403", description = "Forbidden - Ação não permitida para este usuário"),
             @ApiResponse(responseCode = "500", description = "Internal Server Error - Erro inesperado no servidor"),
-            @ApiResponse(responseCode = "501", description = "Not Implemented - Funcionalidade ainda não implementada"),
-            @ApiResponse(responseCode = "502", description = "Bad Gateway - Erro na comunicação com serviço intermediário"),
-            @ApiResponse(responseCode = "503", description = "Service Unavailable - Sistema temporariamente indisponível"),
-            @ApiResponse(responseCode = "504", description = "Gateway Timeout - Tempo de resposta excedido")
     })
     @PostMapping("/cadastro")
-    public  ResponseEntity<BaseResponseDTO> cadastrarUsuario(
+    public ResponseEntity<BaseResponseDTO> cadastrarUsuario(
             @Parameter(description = "Cadastrar novos usuarios no sistema")
-            @RequestBody(required = true) UsuarioDTO usuario,
-            Authentication authentication){
+            @RequestBody(required = true) UsuarioDTO usuario) {
         try {
-            Jwt jwt = (Jwt) authentication.getPrincipal();
-            String tokenEmail = jwt.getClaim("email");
-
-            return response(HttpStatus.OK, usuarioService.cadastraUsuario(usuario, tokenEmail), "Usuario cadastrado com sucesso", SUCCESS);
-        }catch (BaseException baseException){
+            return response(HttpStatus.OK, usuarioService.cadastraUsuario(usuario), "Usuario cadastrado com sucesso", SUCCESS);
+        } catch (BaseException baseException) {
             log.warning(baseException.getMessage());
-
             return errorWithStatusCode(baseException.getMessage(), baseException.getHttpStatus());
-        }catch (Exception exception){
+        } catch (Exception exception) {
             log.warning(exception.getMessage() + exception);
-
-            return errorWithStatusCode(OCORREU_UM_ERRO_DESCONHECIDO_CONTATE_O_ADMINISTRADOR_DO_SISTEMA, HttpStatus.INTERNAL_SERVER_ERROR);
+            return errorWithStatusCode("Ocorreu um erro desconhecido. Contate o administrador do sistema.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

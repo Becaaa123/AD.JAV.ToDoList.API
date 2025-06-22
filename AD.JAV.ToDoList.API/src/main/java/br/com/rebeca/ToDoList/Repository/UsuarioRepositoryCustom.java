@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
 public interface UsuarioRepositoryCustom {
     void atualizarDadosDeUsuario(AtualizarUsuarioDTO  atualizarUsuarioDTO, String tokenEmail);
 
-    void cadastraUsuario(UsuarioDTO usuarioDTO, String tokenEmail);
+    void cadastraUsuario(UsuarioDTO usuarioDTO);
 }

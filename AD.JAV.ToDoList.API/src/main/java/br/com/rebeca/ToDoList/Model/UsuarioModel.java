@@ -3,6 +3,8 @@ package br.com.rebeca.ToDoList.Model;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -20,14 +22,15 @@ import java.time.LocalDateTime;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "Usuario")
+@Table(name = "usuario")
 @EqualsAndHashCode(callSuper = false)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class UsuarioModel {
     private static final long serialVersionUID = -8502585883952542324L;
 
     @Id
-    @Column(name = "idUsuario", unique = true)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", unique = true)
     private Long id;
 
     @Column(name = "nome")
@@ -37,11 +40,11 @@ public class UsuarioModel {
     private  String email;
 
     @Column(name = "senha_hash")
-    private String senha;
+    private String senha_hash;
 
-    @Column(name = "dataCriacao")
-    private LocalDateTime data;
+    @Column(name = "dataCriacao", insertable = false, updatable = false)
+    private LocalDateTime dataCriacao;
 
-    @Column(name = "dataAtualizacao")
-    private LocalDateTime dataAt;
+    @Column(name = "dataAtualizacao", insertable = false)
+    private LocalDateTime dataAtualizacao;
 }
