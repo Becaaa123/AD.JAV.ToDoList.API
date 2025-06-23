@@ -59,28 +59,28 @@ public class UsuarioService {
     }
 
     @Transactional
-    public AtualizarUsuarioDTO atualizarUsuario(AtualizarUsuarioDTO atualizarUsuarioDTO, String tokenEmail){
+    public AtualizarUsuarioDTO atualizarUsuario(AtualizarUsuarioDTO atualizarUsuarioDTO) {
         log.info("Alteração de dados do usuario");
-
-        if (atualizarUsuarioDTO.getUsuarioId() == null){
-            log.warn("É necessario informar qual usuario será alterado");
-            throw  new BaseException(HttpStatus.BAD_REQUEST, "Por favor informe um usuario para ser alterado!!");
-        }try {
-            usuarioRepositoryCustom.atualizarDadosDeUsuario(atualizarUsuarioDTO, tokenEmail);
-
-            log.info("Usuario " + atualizarUsuarioDTO.getUsuarioId() + " atualizado por " + tokenEmail + ".");
-
+        if (atualizarUsuarioDTO.getUsuarioId() == null) {
+            log.warn("É necessário informar qual usuario será alterado");
+            throw new BaseException(HttpStatus.BAD_REQUEST, "Por favor informe um usuario para ser alterado!!");
+        }
+        try {
+            String senhaHash = passwordEncoder.encode(atualizarUsuarioDTO.getSenha());
+            atualizarUsuarioDTO.setSenha(senhaHash);
+            usuarioRepositoryCustom.atualizarDadosDeUsuario(atualizarUsuarioDTO);
+            log.info("Usuario " + atualizarUsuarioDTO.getUsuarioId() + " atualizado.");
             return atualizarUsuarioDTO;
-        }catch (BaseException baseException){
+        } catch (BaseException baseException) {
             log.info(baseException.getMessage());
             throw new BaseException(HttpStatus.BAD_REQUEST, baseException.getMessage());
-        }catch (Exception exception){
-            log.info(ERRO_ALTERACAO + exception.getMessage());
-            throw new BaseException(HttpStatus.BAD_REQUEST, ERRO_ALTERACAO);
+        } catch (Exception exception) {
+            log.info("Erro na atualização: " + exception.getMessage());
+            throw new BaseException(HttpStatus.BAD_REQUEST, "Erro ao atualizar usuario.");
         }
     }
 
-    public  void  atualizarDadosUsuario(AtualizarUsuarioDTO atualizarUsuarioDTO, String tokenEmail){
+    public  void  atualizarDadosUsuario(AtualizarUsuarioDTO atualizarUsuarioDTO){
         UsuarioModel usuarioModel = usuarioRepository.findById(atualizarUsuarioDTO.getUsuarioId())
                 .orElseThrow(() -> new BaseException(HttpStatus.BAD_REQUEST, "Usuario não encontrado!"));
 

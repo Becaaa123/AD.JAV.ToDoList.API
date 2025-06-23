@@ -102,58 +102,20 @@ public class UsuarioController extends BaseController {
                     @Content(mediaType = "application/json", schema = @Schema(implementation = UsuarioDTO.class))
             }),
             @ApiResponse(responseCode = "400", description = "Bad Request - Dados inválidos ou ausentes"),
-            @ApiResponse(responseCode = "401", description = "Unauthorized - Usuário não autenticado"),
-            @ApiResponse(responseCode = "403", description = "Forbidden - Ação não permitida para este usuário"),
             @ApiResponse(responseCode = "500", description = "Internal Server Error - Erro inesperado no servidor"),
-            @ApiResponse(responseCode = "501", description = "Not Implemented - Funcionalidade ainda não implementada"),
-            @ApiResponse(responseCode = "502", description = "Bad Gateway - Erro na comunicação com serviço intermediário"),
-            @ApiResponse(responseCode = "503", description = "Service Unavailable - Sistema temporariamente indisponível"),
-            @ApiResponse(responseCode = "504", description = "Gateway Timeout - Tempo de resposta excedido")
     })
     @PutMapping("/atualizar")
     public ResponseEntity<BaseResponseDTO> atualizarUsuario(
             @Parameter(description = "Atualização de dados do usuario")
-            @RequestBody(required = true) AtualizarUsuarioDTO atualizarUsuario,
-            Authentication authentication) {
+            @RequestBody(required = true) AtualizarUsuarioDTO atualizarUsuario) {
         try {
-            Jwt jwt = (Jwt) authentication.getPrincipal();
-            String tokenEmail = jwt.getClaim("email");
-
-            return response(HttpStatus.OK, usuarioService.atualizarUsuario(atualizarUsuario, tokenEmail), "Usuario atualizado com sucesso" ,SUCCESS);
+            return response(HttpStatus.OK, usuarioService.atualizarUsuario(atualizarUsuario), "Usuario atualizado com sucesso", SUCCESS);
         } catch (BaseException be) {
             log.warning(be.getMessage());
-
             return errorWithStatusCode(be.getMessage(), be.getHttpStatus());
         } catch (Exception exception) {
             log.warning(exception.getMessage() + exception);
-
-            return errorWithStatusCode(OCORREU_UM_ERRO_DESCONHECIDO_CONTATE_O_ADMINISTRADOR_DO_SISTEMA, HttpStatus.INTERNAL_SERVER_ERROR);
+            return errorWithStatusCode("Ocorreu um erro desconhecido. Contate o administrador do sistema.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }
-
-//@PostMapping("/cadastro")
-//public ResponseEntity cadastarUsuario(
-//        @RequestParam(required = false)  String nome,
-//        @RequestParam(required = false) String email,
-//        @RequestParam(required = false) String senha){
-//    @RequestParam(required = false) Integer idPedidoHistorico,
-//    @RequestParam(required = false) String idPedidoMongo) {
-//        BaseResponseDTO baseResponseDTO = new BaseResponseDTO();
-//    public  ResponseEntity consultarPedido(@PathVariable Integer numeroPedido){
-//        BaseResponseDTO baseResponseDTO = new BaseResponseDTO();
-//        try {
-//            var dadosConsulta = pedidoService.consultarPedido(numeroPedido);
-//            return ResponseEntity.ok(BaseResponseDTO.builder()
-//                    .data(dadosConsulta)
-//                    .build()
-//            );
-//        }catch (BusinessException be) {
-//            baseResponseDTO.setMessage(be.getMessage());
-//            return ResponseEntity.status(be.getHttpStatus()).body(baseResponseDTO);
-//        } catch (Exception e){
-//            baseResponseDTO.setMessage("Erro interno ao consultar o pedido.");
-//            log.error("Erro interno ao consultar número do pedido {}: {}", numeroPedido, e.getMessage());
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(baseResponseDTO);
-//        }
-//    }

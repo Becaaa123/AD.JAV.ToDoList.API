@@ -3,11 +3,11 @@ package br.com.rebeca.ToDoList.Service;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import java.util.function.Function;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.function.Function;
 
 @Service
 public class JwtService {
@@ -33,15 +33,6 @@ public class JwtService {
     public Boolean isTokenValid(String token, UserDetails userDetails) {
         String username = extractEmail(token);
         return (username.equals(userDetails.getUsername()));
-    }
-
-    public String generateToken(UserDetails userDetails) {
-        return Jwts.builder()
-                .setSubject(userDetails.getUsername())
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 86400000)) // 24h
-                .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
-                .compact();
     }
 }
 

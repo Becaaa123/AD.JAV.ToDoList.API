@@ -1,6 +1,5 @@
 package br.com.rebeca.ToDoList.Service;
 
-import br.com.rebeca.ToDoList.Model.UsuarioModel;
 import br.com.rebeca.ToDoList.Repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.User;

@@ -27,7 +27,7 @@ public  class UsuarioRepositoryImplCustom implements UsuarioRepositoryCustom {
     private ConverterUtil converterUtil;
 
     @Transactional
-    public void cadastraUsuario(UsuarioDTO usuarioDTO) {
+    public void cadastraUsuario(UsuarioDTO usuarioDTO){
         StringBuilder sql = new StringBuilder();
         sql.append(" INSERT INTO usuario (nome, email, senha_hash) VALUES ");
         sql.append(" (:nome, ");
@@ -43,7 +43,7 @@ public  class UsuarioRepositoryImplCustom implements UsuarioRepositoryCustom {
     }
 
     @Transactional
-    public void atualizarDadosDeUsuario(AtualizarUsuarioDTO atualizarUsuarioDTO, String tokenEmail){
+    public void atualizarDadosDeUsuario(AtualizarUsuarioDTO atualizarUsuarioDTO){
         StringBuilder sql = new StringBuilder();
 
         sql.append(" UPDATE usuario ");
@@ -70,7 +70,7 @@ public  class UsuarioRepositoryImplCustom implements UsuarioRepositoryCustom {
             }
 
             query.executeUpdate();
-            log.info("Usuário " + atualizarUsuarioDTO.getUsuarioId() + " atualizado por " + tokenEmail + ".");
+            log.info("Usuário " + atualizarUsuarioDTO.getUsuarioId() + " atualizado por " + atualizarUsuarioDTO.getEmail() + ".");
         }catch (Exception exception){
             log.error("Erro ao atualzar usuário: " + exception.getMessage(), exception);
             throw new BaseException(HttpStatus.INTERNAL_SERVER_ERROR, "Erro ao atualizar usuário.");

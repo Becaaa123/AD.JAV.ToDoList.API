@@ -8,22 +8,11 @@ public class BaseException extends RuntimeException {
     private final String message;
     private final Throwable throwable;
 
-    public BaseException(final HttpStatus httpStatus, final String message, final Throwable throwable) {
-        this.httpStatus = httpStatus;
-        this.message = message;
-        this.throwable = throwable;
-    }
 
     public BaseException(final HttpStatus httpStatus, final String message) {
         this.httpStatus = httpStatus;
         this.message = message;
         this.throwable = null;
-    }
-
-    public BaseException(final String message, final Throwable throwable) {
-        this.httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
-        this.message = message;
-        this.throwable = throwable;
     }
 
     public BaseException(final String message) {

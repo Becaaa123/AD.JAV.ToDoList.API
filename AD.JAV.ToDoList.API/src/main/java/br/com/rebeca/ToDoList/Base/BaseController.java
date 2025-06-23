@@ -4,7 +4,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 public class BaseController {
-    public static final String OCORREU_UM_ERRO = "Ocorreu um erro desconhecido. Contate o administrador do sistema.";
     protected static final String ERROR = "error";
     protected static final String SUCCESS = "success";
 
@@ -20,10 +19,6 @@ public class BaseController {
         return error(httpStatus.value(), data);
     }
 
-    protected ResponseEntity<BaseResponseDTO> errorForbidden(Object data) {
-        return errorForbidden(HttpStatus.FORBIDDEN.value(), data);
-    }
-
     protected ResponseEntity<BaseResponseDTO> success(Integer codeStatus, Object data) {
         BaseResponseDTO response = new BaseResponseDTO();
         response.setCode(codeStatus);
@@ -33,14 +28,6 @@ public class BaseController {
     }
 
     private ResponseEntity<BaseResponseDTO> error(Integer codeStatus, Object data) {
-        BaseResponseDTO response = new BaseResponseDTO();
-        response.setCode(codeStatus);
-        response.setData(data);
-        response.setMessage(ERROR);
-        return ResponseEntity.status(codeStatus).body(response);
-    }
-
-    private ResponseEntity<BaseResponseDTO> errorForbidden(Integer codeStatus, Object data) {
         BaseResponseDTO response = new BaseResponseDTO();
         response.setCode(codeStatus);
         response.setData(data);
