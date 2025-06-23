@@ -1,6 +1,6 @@
 package br.com.rebeca.ToDoList.Service;
 
-import br.com.rebeca.ToDoList.Base.BaseException;
+import br.com.rebeca.ToDoList.Base.Exception.BaseException;
 import br.com.rebeca.ToDoList.Model.UsuarioModel;
 import br.com.rebeca.ToDoList.Repository.UsuarioRepository;
 import br.com.rebeca.ToDoList.Repository.UsuarioRepositoryCustom;
@@ -14,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @Log4j2
@@ -53,9 +54,13 @@ public class UsuarioService {
         }
     }
 
-    public UsuarioDTO buscarUsuario(UsuarioDTO usuario){
-        UsuarioDTO usuarioDTO = new UsuarioDTO();
-        return usuarioDTO;
+    @Transactional
+    public List<Object[]> buscarUsuarioPorId(Long id) {
+        List<Object[]> usuario = usuarioRepositoryCustom.buscarUsuario(id); // Chame o método do repositório customizado
+        if (usuario.isEmpty()) {
+            throw new BaseException(HttpStatus.NOT_FOUND, "Usuário não encontrado!");
+        }
+        return usuario;
     }
 
     @Transactional

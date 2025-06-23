@@ -1,8 +1,8 @@
 package br.com.rebeca.ToDoList.Controller;
 
 import br.com.rebeca.ToDoList.Base.BaseController;
-import br.com.rebeca.ToDoList.Base.BaseException;
 import br.com.rebeca.ToDoList.Base.BaseResponseDTO;
+import br.com.rebeca.ToDoList.Base.Exception.BaseException;
 import br.com.rebeca.ToDoList.Service.UsuarioService;
 import br.com.rebeca.ToDoList.dto.AtualizarUsuarioDTO;
 import br.com.rebeca.ToDoList.dto.UsuarioDTO;
@@ -17,15 +17,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @Log
 @RestController
@@ -38,38 +39,27 @@ public class UsuarioController extends BaseController {
 
     public static final String OCORREU_UM_ERRO_DESCONHECIDO_CONTATE_O_ADMINISTRADOR_DO_SISTEMA = "Ocorreu um erro desconhecido. Contate o administrador do sistema.";
 
-    @Operation(summary = "Realiza a busca de usuarios")
+    @Operation(summary = "Busca um usuário pelo ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Success", content = {
                     @Content(mediaType = "application/json", schema = @Schema(implementation = UsuarioDTO.class))
             }),
-            @ApiResponse(responseCode = "400", description = "Bad Request - Dados inválidos ou ausentes"),
-            @ApiResponse(responseCode = "401", description = "Unauthorized - Usuário não autenticado"),
-            @ApiResponse(responseCode = "403", description = "Forbidden - Ação não permitida para este usuário"),
-            @ApiResponse(responseCode = "500", description = "Internal Server Error - Erro inesperado no servidor"),
-            @ApiResponse(responseCode = "501", description = "Not Implemented - Funcionalidade ainda não implementada"),
-            @ApiResponse(responseCode = "502", description = "Bad Gateway - Erro na comunicação com serviço intermediário"),
-            @ApiResponse(responseCode = "503", description = "Service Unavailable - Sistema temporariamente indisponível"),
-            @ApiResponse(responseCode = "504", description = "Gateway Timeout - Tempo de resposta excedido")
+            @ApiResponse(responseCode = "404", description = "Usuário não encontrado"),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
-    @GetMapping("/buscar")
-    public ResponseEntity<BaseResponseDTO> buscarUsuario(
-            @Parameter(description = "Buscar usuarios no sistema")
-            @RequestBody(required = true) UsuarioDTO usuario,
-            Authentication authentication) {
+    @GetMapping("/buscar/{id}")
+    public ResponseEntity<List<Object[]>> buscarUsuarioPorId(
+            @Parameter(description = "ID do usuário a ser buscado")
+            @PathVariable Long id) {
         try {
-            Jwt jwt = (Jwt) authentication.getPrincipal();
-            String tokenEmail = jwt.getClaim("email");
-
-            return response(HttpStatus.OK, usuarioService.buscarUsuario(usuario), tokenEmail, SUCCESS);
-        } catch (BaseException baseException) {
-            log.warning(baseException.getMessage());
-
-            return errorWithStatusCode(OCORREU_UM_ERRO_DESCONHECIDO_CONTATE_O_ADMINISTRADOR_DO_SISTEMA, HttpStatus.INTERNAL_SERVER_ERROR);
+            List<Object[]> usuario = usuarioService.buscarUsuarioPorId(id);
+            if (usuario.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            }
+            return ResponseEntity.ok(usuario);
         } catch (Exception e) {
-            log.warning(e.getMessage() + e);
-
-            return errorWithStatusCode(OCORREU_UM_ERRO_DESCONHECIDO_CONTATE_O_ADMINISTRADOR_DO_SISTEMA, HttpStatus.INTERNAL_SERVER_ERROR);
+            log.warning("Erro ao buscar usuário: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
 
@@ -92,7 +82,7 @@ public class UsuarioController extends BaseController {
             return errorWithStatusCode(baseException.getMessage(), baseException.getHttpStatus());
         } catch (Exception exception) {
             log.warning(exception.getMessage() + exception);
-            return errorWithStatusCode("Ocorreu um erro desconhecido. Contate o administrador do sistema.", HttpStatus.INTERNAL_SERVER_ERROR);
+            return errorWithStatusCode(OCORREU_UM_ERRO_DESCONHECIDO_CONTATE_O_ADMINISTRADOR_DO_SISTEMA, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -115,7 +105,7 @@ public class UsuarioController extends BaseController {
             return errorWithStatusCode(be.getMessage(), be.getHttpStatus());
         } catch (Exception exception) {
             log.warning(exception.getMessage() + exception);
-            return errorWithStatusCode("Ocorreu um erro desconhecido. Contate o administrador do sistema.", HttpStatus.INTERNAL_SERVER_ERROR);
+            return errorWithStatusCode(OCORREU_UM_ERRO_DESCONHECIDO_CONTATE_O_ADMINISTRADOR_DO_SISTEMA, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }
