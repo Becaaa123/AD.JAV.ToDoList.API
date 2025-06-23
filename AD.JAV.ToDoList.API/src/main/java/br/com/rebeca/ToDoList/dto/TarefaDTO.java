@@ -16,6 +16,7 @@ public class TarefaDTO {
     private String titulo;
     private String descricao;
     private String dataLimite;
+    private String categoria;
     private String status;
     private Long usuarioId;
 }

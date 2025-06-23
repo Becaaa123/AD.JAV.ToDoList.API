@@ -2,7 +2,7 @@ package br.com.rebeca.ToDoList.Controller;
 
 import br.com.rebeca.ToDoList.Base.BaseController;
 import br.com.rebeca.ToDoList.Base.BaseResponseDTO;
-import br.com.rebeca.ToDoList.Base.Exception.BaseException;
+import br.com.rebeca.ToDoList.Exception.BaseException;
 import br.com.rebeca.ToDoList.Service.UsuarioService;
 import br.com.rebeca.ToDoList.dto.AtualizarUsuarioDTO;
 import br.com.rebeca.ToDoList.dto.UsuarioDTO;

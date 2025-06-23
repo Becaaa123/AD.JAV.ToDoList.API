@@ -1,6 +1,6 @@
 package br.com.rebeca.ToDoList.Service;
 
-import br.com.rebeca.ToDoList.Base.Exception.BaseException;
+import br.com.rebeca.ToDoList.Exception.BaseException;
 import br.com.rebeca.ToDoList.Model.UsuarioModel;
 import br.com.rebeca.ToDoList.Repository.UsuarioRepository;
 import br.com.rebeca.ToDoList.Repository.UsuarioRepositoryCustom;

@@ -1,7 +1,7 @@
 package br.com.rebeca.ToDoList.Repository.Impl;
 
-import br.com.rebeca.ToDoList.Base.Exception.BaseException;
-import br.com.rebeca.ToDoList.Base.Exception.BusinessException;
+import br.com.rebeca.ToDoList.Exception.BaseException;
+import br.com.rebeca.ToDoList.Exception.BusinessException;
 import br.com.rebeca.ToDoList.Repository.UsuarioRepositoryCustom;
 import br.com.rebeca.ToDoList.Util.ConverterUtil;
 import br.com.rebeca.ToDoList.dto.AtualizarUsuarioDTO;
