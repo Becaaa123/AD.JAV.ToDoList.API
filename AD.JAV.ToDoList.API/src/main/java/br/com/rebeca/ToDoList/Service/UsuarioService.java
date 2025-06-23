@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -92,7 +93,7 @@ public class UsuarioService {
         usuarioModel.setNome(atualizarUsuarioDTO.getNome());
         usuarioModel.setEmail(atualizarUsuarioDTO.getEmail());
         usuarioModel.setSenha_hash(atualizarUsuarioDTO.getSenha());
-        usuarioModel.setDataAtualizacao(LocalDateTime.now());
+        usuarioModel.setDataAtualizacao(LocalDate.now());
 
         if (atualizarUsuarioDTO.getSenha() != null) {
             usuarioModel.setSenha_hash(atualizarUsuarioDTO.getSenha());

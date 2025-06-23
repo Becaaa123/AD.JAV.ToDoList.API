@@ -14,7 +14,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -40,11 +40,14 @@ public class TarefaModel {
     private  String descricao;
 
     @Column(name = "dataLimite")
-    private String dataLimite;
+    private LocalDate dataLimite;
 
     @Column(name = "categoria")
     private String categoria;
 
     @Column(name = "status")
     private String status;
+
+    @Column(name = "usuario_id")
+    private Long usuario_id;
 }

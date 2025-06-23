@@ -11,6 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 @Service
 @Log4j2
 public class TarefaService {
@@ -29,6 +32,16 @@ public class TarefaService {
 
             TarefaModel tarefaModel = new TarefaModel();
             tarefaModel.setTitulo(tarefaDTO.getTitulo());
+            tarefaModel.setDescricao(tarefaDTO.getDescricao());
+
+            // Conversão da String para LocalDate
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            LocalDate data = LocalDate.parse(tarefaDTO.getDataLimite(), formatter);
+            tarefaModel.setDataLimite(data);
+
+            tarefaModel.setCategoria(tarefaDTO.getCategoria());
+            tarefaModel.setStatus(tarefaDTO.getStatus());
+            tarefaModel.setUsuario_id(tarefaDTO.getUsuarioId());
 
             tarefaRepository.save(tarefaModel);
 

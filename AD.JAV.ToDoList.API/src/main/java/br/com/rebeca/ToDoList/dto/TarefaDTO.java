@@ -6,13 +6,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
+
 @Data
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class TarefaDTO {
-    private String idTarefa;
+    private String id;
     private String titulo;
     private String descricao;
     private String dataLimite;

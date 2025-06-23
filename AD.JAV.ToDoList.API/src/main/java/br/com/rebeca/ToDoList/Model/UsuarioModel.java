@@ -14,6 +14,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -43,8 +44,8 @@ public class UsuarioModel {
     private String senha_hash;
 
     @Column(name = "dataCriacao", insertable = false, updatable = false)
-    private LocalDateTime dataCriacao;
+    private LocalDate dataCriacao;
 
     @Column(name = "dataAtualizacao", insertable = false)
-    private LocalDateTime dataAtualizacao;
+    private LocalDate dataAtualizacao;
 }
