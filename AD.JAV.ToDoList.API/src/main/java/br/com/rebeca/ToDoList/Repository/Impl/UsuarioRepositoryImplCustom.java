@@ -59,8 +59,8 @@ public  class UsuarioRepositoryImplCustom implements UsuarioRepositoryCustom {
             sql.append(" usuario.nome AS nome, ");
             sql.append(" usuario.email AS email, ");
             sql.append(" usuario.senha_hash AS senha, ");
-            sql.append(" usuario.dataCriacao AS dataCriacao, ");
-            sql.append(" usuario.dataAtualizacao AS dataAtualizacao ");
+            sql.append(" usuario.data_criacao AS dataCriacao, ");
+            sql.append(" usuario.data_atualizacao AS data_atualizacao ");
             sql.append(" FROM usuario ");
             sql.append(" WHERE usuario.id = :id");
 
@@ -104,7 +104,7 @@ public  class UsuarioRepositoryImplCustom implements UsuarioRepositoryCustom {
             sql.append(" senha_hash = :senha_hash, ");
         }
 
-        sql.append(" dataAtualizacao = :dataAtualizacao ");
+        sql.append(" data_atualizacao = :data_atualizacao ");
         sql.append(" WHERE id = :usuarioId ");
 
         try{
@@ -112,7 +112,7 @@ public  class UsuarioRepositoryImplCustom implements UsuarioRepositoryCustom {
 
             query.setParameter("nome", atualizarUsuarioDTO.getNome());
             query.setParameter("email", atualizarUsuarioDTO.getEmail());
-            query.setParameter("dataAtualizacao", LocalDateTime.now());
+            query.setParameter("data_atualizacao", LocalDateTime.now());
             query.setParameter("usuarioId", atualizarUsuarioDTO.getUsuarioId());
 
             if(atualizarUsuarioDTO.getSenha() != null){

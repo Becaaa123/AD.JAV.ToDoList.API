@@ -13,5 +13,5 @@ public interface TarefaRepositoryCustom {
 
     void criarTarefa(TarefaDTO tarefaDTO);
 
-    List<Object[]> buscarUsuario(Long id);
+    List<Object[]> buscarTarefa(String titulo);
 }

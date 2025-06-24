@@ -29,6 +29,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @Log
 @RestController
 @RequestMapping(value = "tarefa")
@@ -46,20 +48,24 @@ public class TarefaController extends BaseController {
                     @Content(mediaType = "application/json", schema = @Schema(implementation = TarefaDTO.class))
             }),
             @ApiResponse(responseCode = "400", description = "Bad Request - Dados inválidos ou ausentes"),
-            @ApiResponse(responseCode = "401", description = "Unauthorized - Usuário não autenticado"),
-            @ApiResponse(responseCode = "403", description = "Forbidden - Ação não permitida para este usuário"),
             @ApiResponse(responseCode = "500", description = "Internal Server Error - Erro inesperado no servidor"),
-            @ApiResponse(responseCode = "501", description = "Not Implemented - Funcionalidade ainda não implementada"),
-            @ApiResponse(responseCode = "502", description = "Bad Gateway - Erro na comunicação com serviço intermediário"),
-            @ApiResponse(responseCode = "503", description = "Service Unavailable - Sistema temporariamente indisponível"),
-            @ApiResponse(responseCode = "504", description = "Gateway Timeout - Tempo de resposta excedido")
     })
-    @GetMapping("/buscar")
-    public ResponseEntity<TarefaDTO> buscar(@RequestBody TarefaDTO tarefa) {
-        TarefaDTO buscarTarefa = tarefaService.buscarTarefa(tarefa);
-        return ResponseEntity.ok(buscarTarefa);
-    }
+    @GetMapping("/buscar/{titulo}")
+        public ResponseEntity<List<Object[]>> buscar(
+            @Parameter(description = "Buscar tarefa via titulo")
+            @PathVariable String titulo) {
+        try {
+            List<Object[]> tarefa = tarefaService.buscarTarefa(titulo);
+            if (tarefa.isEmpty()){
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            }
+            return  ResponseEntity.ok(tarefa);
+        }catch (Exception exception){
+            log.warning("Erro ao buscar tarefa: " + exception.getMessage());
 
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
 
     @Operation(summary = "Realiza a criação de tarefas")
     @ApiResponses(value = {
@@ -109,23 +115,24 @@ public class TarefaController extends BaseController {
         }
     }
 
-    @Operation(summary = "Deleta tarefas")
+    @Operation(summary = "Deleta tarefa pelo ID")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Success", content = {
-                    @Content(mediaType = "application/json", schema = @Schema(implementation = TarefaDTO.class))
-            }),
-            @ApiResponse(responseCode = "400", description = "Bad Request - Dados inválidos ou ausentes"),
-            @ApiResponse(responseCode = "401", description = "Unauthorized - Usuário não autenticado"),
-            @ApiResponse(responseCode = "403", description = "Forbidden - Ação não permitida para este usuário"),
-            @ApiResponse(responseCode = "500", description = "Internal Server Error - Erro inesperado no servidor"),
-            @ApiResponse(responseCode = "501", description = "Not Implemented - Funcionalidade ainda não implementada"),
-            @ApiResponse(responseCode = "502", description = "Bad Gateway - Erro na comunicação com serviço intermediário"),
-            @ApiResponse(responseCode = "503", description = "Service Unavailable - Sistema temporariamente indisponível"),
-            @ApiResponse(responseCode = "504", description = "Gateway Timeout - Tempo de resposta excedido")
+            @ApiResponse(responseCode = "200", description = "Tarefa deletada com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Tarefa não encontrada"),
+            @ApiResponse(responseCode = "500", description = "Erro inesperado no servidor")
     })
-    @DeleteMapping("/deletar")
-    public ResponseEntity<TarefaDTO> deletar(@PathVariable TarefaDTO tarefa) {
-        TarefaDTO deletarTarefa = tarefaService.deletarTarefa(tarefa);
-        return ResponseEntity.ok(deletarTarefa);
+    @DeleteMapping("/deletar/{id}")
+    public ResponseEntity<BaseResponseDTO> deletarPorId(
+            @Parameter(description = "ID da tarefa a ser deletada")
+            @PathVariable Long id) {
+        try {
+            tarefaService.deletarTarefa(id);
+            return response(HttpStatus.OK, null, "Tarefa deletada com sucesso", "SUCCESS");
+        } catch (BaseException e) {
+            return errorWithStatusCode(e.getMessage(), e.getHttpStatus());
+        } catch (Exception e) {
+            log.warning(e.getMessage() + e);
+            return errorWithStatusCode("Erro ao deletar tarefa", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }

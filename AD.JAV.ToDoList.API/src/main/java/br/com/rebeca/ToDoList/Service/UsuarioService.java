@@ -101,4 +101,13 @@ public class UsuarioService {
 
         usuarioRepository.save(usuarioModel);
     }
+
+    @Transactional
+    public void deletarUsuario(Long id) {
+        if (!usuarioRepository.existsById(id)) {
+            throw new BaseException(HttpStatus.NOT_FOUND, "Tarefa não encontrada para deletar");
+        }
+        usuarioRepository.deleteById(id);
+        log.info("Tarefa deletada: id = {}", id);
+    }
 }

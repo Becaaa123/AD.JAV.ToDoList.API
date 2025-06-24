@@ -2,10 +2,8 @@ package br.com.rebeca.ToDoList.Service;
 
 import br.com.rebeca.ToDoList.Exception.BaseException;
 import br.com.rebeca.ToDoList.Model.TarefaModel;
-import br.com.rebeca.ToDoList.Model.UsuarioModel;
 import br.com.rebeca.ToDoList.Repository.TarefaRepository;
 import br.com.rebeca.ToDoList.Repository.TarefaRepositoryCustom;
-import br.com.rebeca.ToDoList.dto.AtualizarUsuarioDTO;
 import br.com.rebeca.ToDoList.dto.EditarTarefaDTO;
 import br.com.rebeca.ToDoList.dto.TarefaDTO;
 import jakarta.transaction.Transactional;
@@ -16,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Service
 @Log4j2
@@ -47,7 +46,7 @@ public class TarefaService {
 
             tarefaRepository.save(tarefaModel);
 
-            log.info("Nova tafera de titulo: " + tarefaModel.getTitulo() + " criada.");
+            log.info("Nova tarefa criada: id = {}, título = {}", tarefaModel.getId(), tarefaModel.getTitulo());
             return tarefaDTO;
         } catch (Exception exception) {
             log.info("ERRO NA CRIAÇÃO DA TAREFA!! " + exception.getMessage());
@@ -60,7 +59,7 @@ public class TarefaService {
         log.info("Editando informações da tarefa...");
         if (editarTarefaDTO.getId() == null){
             log.warn("É necessário informar qual tarefa será alterada!");
-            throw  new BaseException(HttpStatus.BAD_REQUEST, "Por favor digite o titulo da tarefa que deseja alterar");
+            throw  new BaseException(HttpStatus.BAD_REQUEST, "Por favor digite o id da tarefa que deseja alterar");
         }
         try {
             tarefaRepositoryCustom.editaDadosDeTarefa(editarTarefaDTO);
@@ -91,13 +90,22 @@ public class TarefaService {
         tarefaRepository.save(tarefaModel);
     }
 
-    public TarefaDTO buscarTarefa(TarefaDTO tarefaDTO){
-        TarefaDTO tarefa = new TarefaDTO();
+    @Transactional
+    public List<Object[]> buscarTarefa(String titulo){
+        List<Object[]> tarefa = tarefaRepositoryCustom.buscarTarefa(titulo);
+        if (tarefa.isEmpty()){
+            throw  new BaseException(HttpStatus.NOT_FOUND, "Tarefa não encontrada!");
+        }
         return tarefa;
     }
 
-    public TarefaDTO deletarTarefa(TarefaDTO tarefaDTO){
-        TarefaDTO tarefa = new TarefaDTO();
-        return tarefa;
+
+    @Transactional
+    public void deletarTarefa(Long id) {
+        if (!tarefaRepository.existsById(id)) {
+            throw new BaseException(HttpStatus.NOT_FOUND, "Tarefa não encontrada para deletar");
+        }
+        tarefaRepository.deleteById(id);
+        log.info("Tarefa deletada: id = {}", id);
     }
 }

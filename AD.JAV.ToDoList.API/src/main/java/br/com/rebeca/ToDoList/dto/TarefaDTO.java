@@ -14,7 +14,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TarefaDTO {
-    private String id;
+    private Long id;
     private String titulo;
     private String descricao;
     private String dataLimite;

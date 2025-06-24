@@ -18,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -106,6 +107,27 @@ public class UsuarioController extends BaseController {
         } catch (Exception exception) {
             log.warning(exception.getMessage() + exception);
             return errorWithStatusCode(OCORREU_UM_ERRO_DESCONHECIDO_CONTATE_O_ADMINISTRADOR_DO_SISTEMA, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @Operation(summary = "Deleta usuario pelo ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Tarefa deletada com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Tarefa não encontrada"),
+            @ApiResponse(responseCode = "500", description = "Erro inesperado no servidor")
+    })
+    @DeleteMapping("/deletar/{id}")
+    public ResponseEntity<BaseResponseDTO> deletarPorId(
+            @Parameter(description = "ID do usuario a ser deletada")
+            @PathVariable Long id) {
+        try {
+            usuarioService.deletarUsuario(id);
+            return response(HttpStatus.OK, null, "Usuario deletada com sucesso", "SUCCESS");
+        } catch (BaseException e) {
+            return errorWithStatusCode(e.getMessage(), e.getHttpStatus());
+        } catch (Exception e) {
+            log.warning(e.getMessage() + e);
+            return errorWithStatusCode("Erro ao deletar tarefa", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }
