@@ -4,6 +4,8 @@ import br.com.rebeca.ToDoList.Base.BaseController;
 import br.com.rebeca.ToDoList.Base.BaseResponseDTO;
 import br.com.rebeca.ToDoList.Exception.BaseException;
 import br.com.rebeca.ToDoList.Service.TarefaService;
+import br.com.rebeca.ToDoList.dto.AtualizarUsuarioDTO;
+import br.com.rebeca.ToDoList.dto.EditarTarefaDTO;
 import br.com.rebeca.ToDoList.dto.TarefaDTO;
 import br.com.rebeca.ToDoList.dto.UsuarioDTO;
 import io.swagger.v3.oas.annotations.Operation;
@@ -24,6 +26,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @Log
@@ -87,18 +90,23 @@ public class TarefaController extends BaseController {
                     @Content(mediaType = "application/json", schema = @Schema(implementation = TarefaDTO.class))
             }),
             @ApiResponse(responseCode = "400", description = "Bad Request - Dados inválidos ou ausentes"),
-            @ApiResponse(responseCode = "401", description = "Unauthorized - Usuário não autenticado"),
-            @ApiResponse(responseCode = "403", description = "Forbidden - Ação não permitida para este usuário"),
             @ApiResponse(responseCode = "500", description = "Internal Server Error - Erro inesperado no servidor"),
-            @ApiResponse(responseCode = "501", description = "Not Implemented - Funcionalidade ainda não implementada"),
-            @ApiResponse(responseCode = "502", description = "Bad Gateway - Erro na comunicação com serviço intermediário"),
-            @ApiResponse(responseCode = "503", description = "Service Unavailable - Sistema temporariamente indisponível"),
-            @ApiResponse(responseCode = "504", description = "Gateway Timeout - Tempo de resposta excedido")
     })
     @PutMapping("/editar")
-    public ResponseEntity<TarefaDTO> editar(@RequestBody TarefaDTO tarefa) {
-        TarefaDTO editarTarefa = tarefaService.editarTarefa(tarefa);
-        return ResponseEntity.ok(editarTarefa);
+    public ResponseEntity<BaseResponseDTO> editar(
+            @Parameter(description = "Atualizar/editar dados de tarefa existente no sistema")
+            @RequestBody(required = true)EditarTarefaDTO editarTarefaDTO) {
+        try{
+            return response(HttpStatus.OK, tarefaService.editarTarefa(editarTarefaDTO), "Tarefa atualizada com susceso", SUCCESS);
+        }catch (BaseException baseException){
+            log.warning(baseException.getMessage());
+
+            return errorWithStatusCode(baseException.getMessage(), baseException.getHttpStatus());
+        }catch (Exception exception){
+            log.warning(exception.getMessage() + exception);
+
+            return errorWithStatusCode(OCORREU_UM_ERRO_DESCONHECIDO_CONTATE_O_ADMINISTRADOR_DO_SISTEMA, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @Operation(summary = "Deleta tarefas")

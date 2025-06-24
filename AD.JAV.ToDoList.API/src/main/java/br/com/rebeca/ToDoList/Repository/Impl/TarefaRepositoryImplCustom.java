@@ -5,6 +5,7 @@ import br.com.rebeca.ToDoList.Exception.BusinessException;
 import br.com.rebeca.ToDoList.Repository.TarefaRepositoryCustom;
 import br.com.rebeca.ToDoList.Util.ConverterUtil;
 import br.com.rebeca.ToDoList.dto.AtualizarUsuarioDTO;
+import br.com.rebeca.ToDoList.dto.EditarTarefaDTO;
 import br.com.rebeca.ToDoList.dto.TarefaDTO;
 import br.com.rebeca.ToDoList.dto.UsuarioDTO;
 import jakarta.persistence.EntityManager;
@@ -100,37 +101,32 @@ public  class TarefaRepositoryImplCustom implements TarefaRepositoryCustom {
     }
 
     @Transactional
-    public void atualizarDadosDeUsuario(AtualizarUsuarioDTO atualizarUsuarioDTO){
+    public void editaDadosDeTarefa(EditarTarefaDTO editarTarefaDTO){
         StringBuilder sql = new StringBuilder();
 
-        sql.append(" UPDATE usuario ");
-        sql.append(" SET nome = :nome, ");
-        sql.append(" email = :email, ");
-
-        if(atualizarUsuarioDTO.getSenha() != null){
-            sql.append(" senha_hash = :senha_hash, ");
-        }
-
-        sql.append(" dataAtualizacao = :dataAtualizacao ");
-        sql.append(" WHERE id = :usuarioId ");
+        sql.append(" UPDATE tarefas ");
+        sql.append(" SET titulo = :titulo, ");
+        sql.append(" descricao = :descricao, ");
+        sql.append(" data_limite = :data_limite, ");
+        sql.append(" categoria = :categoria, ");
+        sql.append(" status = :status ");
+        sql.append(" WHERE id = :id ");
 
         try{
             Query query = em.createNativeQuery(sql.toString());
 
-            query.setParameter("nome", atualizarUsuarioDTO.getNome());
-            query.setParameter("email", atualizarUsuarioDTO.getEmail());
-            query.setParameter("dataAtualizacao", LocalDateTime.now());
-            query.setParameter("usuarioId", atualizarUsuarioDTO.getUsuarioId());
-
-            if(atualizarUsuarioDTO.getSenha() != null){
-                query.setParameter("senha_hash", atualizarUsuarioDTO.getSenha());
-            }
-
+            query.setParameter("titulo", editarTarefaDTO.getTitulo());
+            query.setParameter("descricao", editarTarefaDTO.getDescricao());
+            query.setParameter("data_limite", editarTarefaDTO.getDataLimite());
+            query.setParameter("categoria", editarTarefaDTO.getCategoria());
+            query.setParameter("status", editarTarefaDTO.getStatus());
+            query.setParameter("id", editarTarefaDTO.getId());
             query.executeUpdate();
-            log.info("Usuário " + atualizarUsuarioDTO.getUsuarioId() + " atualizado por " + atualizarUsuarioDTO.getEmail() + ".");
+
+            log.info("Tarefa: " + editarTarefaDTO.getTitulo() + " de id " + editarTarefaDTO.getId() + " atualizado com sucesso.");
         }catch (Exception exception){
-            log.error("Erro ao atualzar usuário: " + exception.getMessage(), exception);
-            throw new BaseException(HttpStatus.INTERNAL_SERVER_ERROR, "Erro ao atualizar usuário.");
+            log.error("Erro ao atualzar tarefa: " + exception.getMessage(), exception);
+            throw new BaseException(HttpStatus.INTERNAL_SERVER_ERROR, "Erro ao atualizar tarefa.");
         }
     }
 }

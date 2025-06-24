@@ -2,8 +2,11 @@ package br.com.rebeca.ToDoList.Service;
 
 import br.com.rebeca.ToDoList.Exception.BaseException;
 import br.com.rebeca.ToDoList.Model.TarefaModel;
+import br.com.rebeca.ToDoList.Model.UsuarioModel;
 import br.com.rebeca.ToDoList.Repository.TarefaRepository;
 import br.com.rebeca.ToDoList.Repository.TarefaRepositoryCustom;
+import br.com.rebeca.ToDoList.dto.AtualizarUsuarioDTO;
+import br.com.rebeca.ToDoList.dto.EditarTarefaDTO;
 import br.com.rebeca.ToDoList.dto.TarefaDTO;
 import jakarta.transaction.Transactional;
 import lombok.extern.log4j.Log4j2;
@@ -29,7 +32,6 @@ public class TarefaService {
         log.info("Cadastrando tarefa...");
 
         try {
-
             TarefaModel tarefaModel = new TarefaModel();
             tarefaModel.setTitulo(tarefaDTO.getTitulo());
             tarefaModel.setDescricao(tarefaDTO.getDescricao());
@@ -53,10 +55,40 @@ public class TarefaService {
         }
     }
 
+    @Transactional
+    public EditarTarefaDTO editarTarefa(EditarTarefaDTO editarTarefaDTO){
+        log.info("Editando informações da tarefa...");
+        if (editarTarefaDTO.getId() == null){
+            log.warn("É necessário informar qual tarefa será alterada!");
+            throw  new BaseException(HttpStatus.BAD_REQUEST, "Por favor digite o titulo da tarefa que deseja alterar");
+        }
+        try {
+            tarefaRepositoryCustom.editaDadosDeTarefa(editarTarefaDTO);
+            log.info("Tarefa de titulo: " + editarTarefaDTO.getTitulo() + " atualizada com sucesso!!");
 
-    public TarefaDTO editarTarefa(TarefaDTO tarefaDTO){
-        TarefaDTO tarefa = new TarefaDTO();
-        return tarefa;
+            return editarTarefaDTO;
+        }catch (BaseException baseException){
+            log.info(baseException.getMessage());
+            throw  new BaseException(HttpStatus.BAD_REQUEST, baseException.getMessage());
+        }catch (Exception exception){
+            log.info("Erro ao atualizar/editar informações de tarefa: " + exception.getMessage());
+            throw new BaseException(HttpStatus.BAD_REQUEST, "Erro ao atualizar/editar tarefa!");
+        }
+    }
+
+    public  void editarDadosdeTarefa(EditarTarefaDTO editarTarefaDTO){
+
+        TarefaModel tarefaModel = tarefaRepository.findById((editarTarefaDTO.getId()))
+                .orElseThrow(() -> new BaseException(HttpStatus.BAD_REQUEST, "Tarefa não encontrada"));
+
+        tarefaModel.setTitulo(editarTarefaDTO.getTitulo());
+        tarefaModel.setDescricao(editarTarefaDTO.getDescricao());
+        tarefaModel.setCategoria(editarTarefaDTO.getCategoria());
+        tarefaModel.setStatus(editarTarefaDTO.getStatus());
+        tarefaModel.setDataLimite(LocalDate.parse(editarTarefaDTO.getDataLimite()));
+        tarefaModel.setUsuario_id(editarTarefaDTO.getUsuarioId());
+
+        tarefaRepository.save(tarefaModel);
     }
 
     public TarefaDTO buscarTarefa(TarefaDTO tarefaDTO){
