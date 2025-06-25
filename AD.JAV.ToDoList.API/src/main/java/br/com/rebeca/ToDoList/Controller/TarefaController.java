@@ -4,7 +4,6 @@ import br.com.rebeca.ToDoList.Base.BaseController;
 import br.com.rebeca.ToDoList.Base.BaseResponseDTO;
 import br.com.rebeca.ToDoList.Exception.BaseException;
 import br.com.rebeca.ToDoList.Service.TarefaService;
-import br.com.rebeca.ToDoList.dto.AtualizarUsuarioDTO;
 import br.com.rebeca.ToDoList.dto.EditarTarefaDTO;
 import br.com.rebeca.ToDoList.dto.TarefaDTO;
 import br.com.rebeca.ToDoList.dto.UsuarioDTO;
@@ -26,10 +25,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @Log
 @RestController
@@ -51,15 +47,20 @@ public class TarefaController extends BaseController {
             @ApiResponse(responseCode = "500", description = "Internal Server Error - Erro inesperado no servidor"),
     })
     @GetMapping("/buscar/{titulo}")
-        public ResponseEntity<List<Object[]>> buscar(
+        public ResponseEntity buscarTarefaPorTitulo(
             @Parameter(description = "Buscar tarefa via titulo")
             @PathVariable String titulo) {
         try {
-            List<Object[]> tarefa = tarefaService.buscarTarefa(titulo);
-            if (tarefa.isEmpty()){
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-            }
-            return  ResponseEntity.ok(tarefa);
+            var dadosTarefa = tarefaService.buscarTarefa(titulo);
+            return ResponseEntity.ok(BaseResponseDTO.builder()
+                    .data(dadosTarefa)
+                    .build()
+            );
+
+//            if (dadosTarefa.isEmpty()){
+//                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+//            }
+//            return  ResponseEntity.ok(dadosTarefa);
         }catch (Exception exception){
             log.warning("Erro ao buscar tarefa: " + exception.getMessage());
 
