@@ -27,6 +27,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @Log
 @RestController
 @RequestMapping(value = "tarefa")
@@ -47,20 +49,15 @@ public class TarefaController extends BaseController {
             @ApiResponse(responseCode = "500", description = "Internal Server Error - Erro inesperado no servidor"),
     })
     @GetMapping("/buscar/{titulo}")
-        public ResponseEntity buscarTarefaPorTitulo(
+    public ResponseEntity<List<Object[]>> buscar(
             @Parameter(description = "Buscar tarefa via titulo")
             @PathVariable String titulo) {
         try {
-            var dadosTarefa = tarefaService.buscarTarefa(titulo);
-            return ResponseEntity.ok(BaseResponseDTO.builder()
-                    .data(dadosTarefa)
-                    .build()
-            );
-
-//            if (dadosTarefa.isEmpty()){
-//                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-//            }
-//            return  ResponseEntity.ok(dadosTarefa);
+            List<Object[]> tarefa = tarefaService.buscarTarefa(titulo);
+            if (tarefa.isEmpty()){
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            }
+            return  ResponseEntity.ok(tarefa);
         }catch (Exception exception){
             log.warning("Erro ao buscar tarefa: " + exception.getMessage());
 

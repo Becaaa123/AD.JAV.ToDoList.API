@@ -91,50 +91,13 @@ public class TarefaService {
         tarefaRepository.save(tarefaModel);
     }
 
-//    @Transactional
-//    public List<Object[]> buscarTarefa(String titulo){
-//        List<Object[]> tarefa = tarefaRepositoryCustom.buscarTarefa(titulo);
-//        if (tarefa.isEmpty()){
-//            throw  new BaseException(HttpStatus.NOT_FOUND, "Tarefa não encontrada!");
-//        }
-//        return tarefa;
-//    } public PedidoInformacoesDTO consultarPedido(Integer numeroPedido){
-//        log.info("Consultando pedido: {}", numeroPedido);
-//
-//        if (numeroPedido == null){
-//            throw new BusinessException("Número do pedido não informado ou inválido!!", HttpStatus.BAD_REQUEST);
-//        }
-//
-//        PedidoInformacoesDTO pedidosInfosDTO = null;
-//        LojaGrupoAssociacaoDTO lojaGrupoAssociacaoDTO = new LojaGrupoAssociacaoDTO();
-//
-//        try {
-//        	pedidosInfosDTO = pedidoRepository.buscarInfosPedidos(numeroPedido);
-//        }catch(Exception e) {
-//        	log.error(e);
-//       	   log.info("Pedido {} não encontrado no PostgreSQL. Tentando buscar no MongoDB...", numeroPedido);
-//
-//        }
-
     @Transactional
-    public TarefaDTO buscarTarefa(String titulo){
-        log.info("Consultando tarefas que contem no titulo: {}", titulo);
-
-        if (titulo == null){
-            throw new BusinessException("Titulo da tarefa não encontrado! Digite um titulo existente.", HttpStatus.BAD_REQUEST);
+    public List<Object[]> buscarTarefa(String titulo){
+        List<Object[]> tarefa = tarefaRepositoryCustom.buscarTarefa(titulo);
+        if (tarefa.isEmpty()){
+            throw  new BaseException(HttpStatus.NOT_FOUND, "Tarefa não encontrada!");
         }
-
-        TarefaDTO tarefaDTO = new TarefaDTO();
-
-        try{
-            tarefaDTO = tarefaRepositoryCustom.buscarTarefa(titulo);
-        }catch (Exception exception){
-            log.error(exception);
-
-            log.info("Nenhuma tarefa encontrada com esse titulo... ", titulo);
-        }
-
-        return tarefaDTO;
+        return tarefa;
     }
 
     @Transactional
